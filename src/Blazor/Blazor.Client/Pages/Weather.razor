@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Blazor.Client.Weather
 @attribute [Authorize]
+@attribute [StreamRendering]
 
 @inject IWeatherForecaster WeatherForecaster
 
@@ -45,6 +46,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await Task.Delay(2000);
         forecasts = await WeatherForecaster.GetWeatherForecastAsync();
     }
 

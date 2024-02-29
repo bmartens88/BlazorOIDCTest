@@ -26,7 +26,8 @@ internal static class Config
             [
                 IdentityServerConstants.StandardScopes.OpenId,
                 IdentityServerConstants.StandardScopes.Profile,
-                IdentityServerConstants.StandardScopes.Email
+                IdentityServerConstants.StandardScopes.Email,
+                IdentityServerConstants.StandardScopes.Address
             ],
             Enabled = true,
             AllowedGrantTypes = GrantTypes.Code

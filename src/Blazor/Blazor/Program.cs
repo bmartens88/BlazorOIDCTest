@@ -24,6 +24,8 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
         opts.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         opts.SaveTokens = true;
         opts.UsePkce = true;
+        opts.MapInboundClaims = false;
+        opts.GetClaimsFromUserInfoEndpoint = true;
     })
     .AddCookie();
 

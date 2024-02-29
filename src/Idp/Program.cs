@@ -28,7 +28,10 @@ services.AddIdentityServer(opts =>
     .AddAspNetIdentity<ApplicationUser>();
 
 services.AddAuthentication()
-    .AddCookie();
+    .AddCookie(opts =>
+    {
+        opts.Cookie.Name = "Idp";
+    });
 
 services.AddAuthorization();
 

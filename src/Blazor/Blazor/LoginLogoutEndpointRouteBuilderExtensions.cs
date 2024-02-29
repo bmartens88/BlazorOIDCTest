@@ -15,7 +15,7 @@ internal static class LoginLogoutEndpointRouteBuilderExtensions
             .AllowAnonymous();
 
         group.MapPost("/logout", ([FromForm] string? returnUrl) => TypedResults.SignOut(GetAuthProperties(returnUrl),
-            [CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme]));
+            [OpenIdConnectDefaults.AuthenticationScheme, CookieAuthenticationDefaults.AuthenticationScheme]));
 
         return group;
     }

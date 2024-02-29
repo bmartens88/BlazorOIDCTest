@@ -1,0 +1,20 @@
+﻿@page "/Account/LoggedOut"
+@using Duende.IdentityServer.Services
+
+@inject IIdentityServerInteractionService InteractionService
+@inject NavigationManager NavigationManager
+
+@code {
+    [SupplyParameterFromQuery]
+    private string? LogoutId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var logout = await InteractionService.GetLogoutContextAsync(LogoutId);
+
+        var postLogoutRedirectUri = logout?.PostLogoutRedirectUri;
+
+        NavigationManager.NavigateTo(postLogoutRedirectUri ?? "~/");
+    }
+
+}

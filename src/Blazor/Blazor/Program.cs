@@ -28,7 +28,10 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
         opts.MapInboundClaims = false;
         opts.GetClaimsFromUserInfoEndpoint = true;
     })
-    .AddCookie();
+    .AddCookie(opts =>
+    {
+        opts.Cookie.Name = "Blazor.Client";
+    });
 
 builder.Services.AddAuthorization();
 

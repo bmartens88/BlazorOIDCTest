@@ -1,0 +1,56 @@
+﻿@page "/Account/Logout"
+@using Microsoft.AspNetCore.Authentication
+@using Duende.IdentityServer.Extensions
+@using Duende.IdentityServer.Services
+@using IdentityModel
+@using Duende.IdentityServer.Events
+@using Duende.IdentityServer
+@using Microsoft.AspNetCore.Authentication.Cookies
+
+@inject IIdentityServerInteractionService InteractionService
+@inject IEventService Events
+@inject NavigationManager NavigationManager
+
+@code {
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromQuery] private string? LogoutId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        var user = authResult.Principal;
+        if (user?.Identity?.IsAuthenticated == true)
+        {
+            LogoutId ??= await InteractionService.CreateLogoutContextAsync();
+
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var idp = user.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+
+            await Events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()));
+
+            if (idp is not null and not IdentityServerConstants.LocalIdentityProvider)
+            {
+                if (await GetSchemeSupportsSignOutAsync(idp))
+                {
+                    var url = $"/Account/LoggedOut?logoutId={LogoutId}";
+                    await HttpContext.SignOutAsync(idp, new AuthenticationProperties
+                    {
+                        RedirectUri = url
+                    });
+                }
+            }
+        }
+
+        NavigationManager.NavigateTo($"/Account/LoggedOut?logoutId={LogoutId}");
+    }
+
+    private async Task<bool> GetSchemeSupportsSignOutAsync(string idp)
+    {
+        var provider = HttpContext.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
+        var handler = await provider.GetHandlerAsync(HttpContext, idp);
+        return handler is IAuthenticationSignOutHandler;
+    }
+
+}

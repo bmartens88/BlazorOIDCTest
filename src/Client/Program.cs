@@ -16,6 +16,7 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
         opts.Scope.Add("email");
         opts.Scope.Add("profile");
         opts.Scope.Add("offline_access");
+        opts.Scope.Add("api1");
         opts.SaveTokens = true;
         opts.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         opts.MapInboundClaims = false;
@@ -45,7 +46,8 @@ app.MapGet("/callback", async (HttpContext httpContext) =>
 
     if (provider is not null)
         claims.Add(new { Type = "provider", Value = provider });
-    return TypedResults.Ok(claims);
+    var items = authResult.Properties.Items.Select(i => new { i.Key, i.Value });
+    return TypedResults.Ok(new { claims, items });
 });
 
 app.Run();

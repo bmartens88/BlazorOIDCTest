@@ -22,6 +22,8 @@ services.AddIdentityCore<ApplicationUser>(opts => opts.SignIn.RequireConfirmedAc
 services.AddIdentityServer(opts =>
         opts.Authentication.CookieAuthenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme)
     .AddInMemoryIdentityResources(Config.IdentityResources)
+    .AddInMemoryApiScopes(Config.ApiScopes)
+    .AddInMemoryApiResources(Config.ApiResources)
     .AddInMemoryClients(Config.Clients)
     .AddAspNetIdentity<ApplicationUser>();
 

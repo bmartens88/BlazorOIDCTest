@@ -19,8 +19,9 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
         opts.ClientId = "web";
         opts.ClientSecret = "secret";
         opts.ResponseType = OpenIdConnectResponseType.Code;
-        opts.Scope.Add("email");
-        opts.Scope.Add("offline_access");
+        opts.Scope.Add(OpenIdConnectScope.Email);
+        opts.Scope.Add(OpenIdConnectScope.OfflineAccess);
+        opts.Scope.Add("api1");
         opts.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         opts.SaveTokens = true;
         opts.UsePkce = true;

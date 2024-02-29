@@ -12,6 +12,19 @@ internal static class Config
         new IdentityResources.Email()
     ];
 
+    internal static IEnumerable<ApiScope> ApiScopes =>
+    [
+        new ApiScope("api1", "My API")
+    ];
+
+    internal static IEnumerable<ApiResource> ApiResources =>
+    [
+        new ApiResource("Weather.Get", "Get weather forecast")
+        {
+            Scopes = ["api1"]
+        }
+    ];
+
     internal static IEnumerable<Client> Clients =>
     [
         new Client
@@ -27,7 +40,8 @@ internal static class Config
                 IdentityServerConstants.StandardScopes.OpenId,
                 IdentityServerConstants.StandardScopes.Profile,
                 IdentityServerConstants.StandardScopes.Email,
-                IdentityServerConstants.StandardScopes.Address
+                IdentityServerConstants.StandardScopes.Address,
+                "api1"
             ],
             Enabled = true,
             AllowedGrantTypes = GrantTypes.Code

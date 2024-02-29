@@ -1,6 +1,8 @@
+using Idp;
 using Idp.Components;
 using Idp.Data;
 using Idp.Model;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +18,12 @@ services.AddIdentityCore<ApplicationUser>(opts => opts.SignIn.RequireConfirmedAc
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
+
+services.AddIdentityServer(opts =>
+        opts.Authentication.CookieAuthenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddInMemoryIdentityResources(Config.IdentityResources)
+    .AddInMemoryClients(Config.Clients)
+    .AddAspNetIdentity<ApplicationUser>();
 
 services.AddAuthentication()
     .AddCookie();
@@ -37,7 +45,7 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// app.UseIdentityServer();
+app.UseIdentityServer();
 app.UseAuthorization();
 app.UseAntiforgery();
 
